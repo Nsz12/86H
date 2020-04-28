@@ -120,8 +120,8 @@ if(isset($_GET["action"])){
                                              ?>
                                             <div>
                                              <label><?php echo  $row2["group_name"] ?></label>
-                                             <button class="btn btn-primary" type="button" onclick="document.location.href = welcome.php?action=join&group=<?php echo $row2["group_id"];?>;">Join</button>
-                                             <button class="btn btn-primary" type="button" onclick="document.location.href = welcome.php?action=reject&group=<?php echo $row2["group_id"];?>;">Reject</button>
+                                             <a class="btn btn-primary"  src="document.location.href = welcome.php?action=join&group=<?php echo $row2["group_id"];?>;">Join</a>
+                                             <a class="btn btn-primary" src="document.location.href = welcome.php?action=reject&group=<?php echo $row2["group_id"];?>;">Reject</a>
                                              </div>
 
 
