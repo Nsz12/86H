@@ -177,7 +177,7 @@
                  </div>
 
                  <div class="form-group"><input type="submit" value="Sign Up" class="btn btn-primary btn-block" style="background-color: rgb(137,71,244);">
-                 </div><a class="already" href="login.php" style="color: rgb(230,255,255);">You already have an account? Login here.</a>
+                 </div><a class="already" href="index.php" style="color: rgb(230,255,255);">You already have an account? Login here.</a>
                  </form>
          </div>
      </div>
