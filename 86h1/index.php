@@ -134,7 +134,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <div class="form-group"><input type="submit" class="btn btn-primary btn-block" value="Login" style="background-color: rgb(137,71,244);">
               <a class="btn btn-primary btn-block" role="button" href="Create_Account.php" style="background-color: rgb(137,71,244);">Create account</a>
             </div>
-            <a class="forgot" href="ResetPassword.php" style="color: rgb(255,255,255);">Forgot your email or password?</a>
+            <a class="forgot" href="ResetPassword.php" style="color: rgb(255,255,255);">Forgot your password?</a>
         </form>
     </div>
     <div class="footer-basic" style="background-color: rgb(46,15,123);">
