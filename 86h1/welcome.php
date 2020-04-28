@@ -12,25 +12,25 @@ require_once "config.php";
 $id = $_SESSION['id'];
 
 //select statment
-$sql = "SELECT * from groups_list where user_id = $id ";
+$sql = "SELECT * from groups_list where user_id = ".$id ;
 //store the result
 $result = mysqli_query($connect, $sql);
 
 
-$sql = "SELECT * from invitation where user_id = $id ";
+$sql = "SELECT * from invitation where user_id =". $id ;
 
 $invite = mysqli_query($connect, $sql);
 
 if(isset($_GET["action"])){
-    $sql = "DELETE from invitation where group_id = $_GET['group'] and user_id = $id";
+    $sql = "DELETE from invitation where group_id = ".$_GET['group']." and user_id = ".$id;
     mysqli_query($connect, $sql);
 
      if($_GET["action"] == "join"){
-        $sql = "SELECT group_name from groups_list where group_id = $_GET['group']";
+        $sql = "SELECT group_name from groups_list where group_id = ".$_GET['group'];
         $res = mysqli_query($connect, $sql);
         $r = $res->fetch_assoc();
        $sql= "INSERT INTO groups_list (user_id, group_id, group_name, image)
-        VALUES ($id,$_GET['group'] , '$r['group_name']', 'assets/img/sharing-money-2.png')";
+        VALUES (".$id.",".$_GET['group']." , '".$r['group_name']."', 'assets/img/sharing-money-2.png')";
 
     mysqli_query($connect, $sql);
      }
@@ -94,7 +94,7 @@ if(isset($_GET["action"])){
                                     }
 
                                    } else {
-                                             echo "<div class="card-body"><p class="card-text" style="color: rgb(230,255,255);">you are not joined in any group<p><div class="card-body">";
+                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>you are not joined in any group<p><div class='card-body'>";
                                             }
 
 
