@@ -33,7 +33,9 @@ if(isset($_GET["action"])){
         VALUES (".$id.",".$_GET['group']." , '".$r['group_name']."', 'assets/img/sharing-money-2.png')";
 
     mysqli_query($connect, $sql);
+
      }
+     echo '<script>window.location="welcome.php"</script>';
 
 
 
@@ -120,8 +122,8 @@ if(isset($_GET["action"])){
                                              ?>
                                             <div>
                                              <label><?php echo  $row2["group_name"] ?></label>
-                                             <a class="btn btn-primary"  src="document.location.href = welcome.php?action=join&group=<?php echo $row2["group_id"];?>;">Join</a>
-                                             <a class="btn btn-primary" src="document.location.href = welcome.php?action=reject&group=<?php echo $row2["group_id"];?>;">Reject</a>
+                                             <a class="btn btn-primary"  href="welcome.php?action=join&group=<?php echo $row2["group_id"];?>">Join</a>
+                                             <a class="btn btn-primary" href="welcome.php?action=reject&group=<?php echo $row2["group_id"];?>">Reject</a>
                                              </div>
 
 
