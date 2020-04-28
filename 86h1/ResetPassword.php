@@ -71,36 +71,70 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html style="background-color: rgb(46,15,123);">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Reset Password</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <style type="text/css">
-        body{ font: 14px sans-serif; }
-        .wrapper{ width: 350px; padding: 20px; }
-    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>86h login</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/Footer-Basic.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Dark.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
-<body>
-    <div class="wrapper">
-        <h2>Reset Password</h2>
-        <p>Please fill out this form to reset your password.</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+
+<body style="background-color: rgb(46,15,123);">
+    <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
+        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo"><a class="navbar-brand" href="#" style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div
+                class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item" role="presentation"></li>
+                    <li class="nav-item" role="presentation"></li>
+                    <li class="nav-item" role="presentation"></li>
+                </ul>
+        </div>
+        </div>
+    </nav>
+    <div class="login-clean" style="background-color: rgb(15,7,67);">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" style="background-color: rgb(52,33,128);">
+            <h2 class="sr-only">Login Form</h2>
+            <div class="illustration"><i class="icon ion-ios-navigate" style="color: rgb(137,71,244);"></i></div>
+
             <div class="form-group <?php echo (!empty($new_password_err)) ? 'has-error' : ''; ?>">
-                <label>New Password</label>
-                <input type="password" name="new_password" class="form-control" value="<?php echo $new_password; ?>">
-                <span class="help-block"><?php echo $new_password_err; ?></span>
+            <input class="form-control" type="password" name="new_password" placeholder="new password">
+            <span class="help-block"><?php echo $new_password_err; ?>></span>
             </div>
+
             <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
-                <label>Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-control">
-                <span class="help-block"><?php echo $confirm_password_err; ?></span>
+            <input class="form-control" type="password" name="confirm_password" placeholder="Confirm Password">
+            <span class="help-block"><?php echo $confirm_password_err; ?>></span>
             </div>
+
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Submit">
-                <a class="btn btn-link" href="welcome.php">Cancel</a>
-            </div>
+              <input type="submit" class="btn btn-primary btn-block" value="Submit" style="background-color: rgb(137,71,244);">Submit</a>
+              <a class="btn btn-primary btn-block" role="button" href="Create_Account.php" style="background-color: rgb(137,71,244);">Cancel</a></div>
         </form>
     </div>
+    <div class="footer-basic" style="background-color: rgb(46,15,123);">
+        <footer style="background-color: rgb(46,15,123);padding: 8px;">
+            <div class="social"><a href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-instagram" style="color: rgb(230,255,255);"></i></a><a href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-snapchat" style="color: rgb(230,255,255);"></i></a>
+                <a
+                    href="#"><i class="icon ion-social-twitter" style="color: rgb(230,255,255);"></i></a><a href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-facebook" style="color: rgb(230,255,255);"></i></a></div>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Home</a></li>
+                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Services</a></li>
+                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">About</a></li>
+                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Terms</a></li>
+                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Privacy Policy</a></li>
+            </ul>
+            <p class="copyright" style="color: rgb(230,255,255);">Company Name © 2017</p>
+        </footer>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
 </html>

@@ -131,7 +131,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <span class="help-block"><?php echo $password_err; ?></span>
             </div>
 
-            <div class="form-group"><a class="btn btn-primary btn-block" role="button" href="Group_page.html" style="background-color: rgb(137,71,244);">Log In</a>
+            <div class="form-group"><input type="submit" class="btn btn-primary btn-block" value="Login" style="background-color: rgb(137,71,244);">
               <a class="btn btn-primary btn-block" role="button" href="Create_Account.php" style="background-color: rgb(137,71,244);">Create account</a>
             </div>
             <a class="forgot" href="ResetPassword.php" style="color: rgb(255,255,255);">Forgot your email or password?</a>
