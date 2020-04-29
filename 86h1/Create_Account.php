@@ -36,7 +36,10 @@
              } else{
                  echo "Oops! Something went wrong. Please try again later.";
              }
-
+             // Close statement
+                     mysqli_stmt_close($stmt);
+                 }
+             }
 
              // Validate email
              if(empty(trim($_POST["email"]))){
@@ -108,7 +111,7 @@
              // Attempt to execute the prepared statement
              if(mysqli_stmt_execute($stmt)){
                  // Redirect to login page
-                 header("location: login.php");
+                 header("Location: index.php");
              } else{
                  echo "Something went wrong. Please try again later.";
              }
@@ -157,7 +160,7 @@
                  <h2 class="text-center" style="color: rgb(230,255,255);"><strong>Create</strong> an account.</h2>
 
                  <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                 <input class="form-control" type="text" name="UserName" placeholder="User name" value="<?php echo $username; ?>">
+                 <input class="form-control" type="text" name="username" placeholder="User name" value="<?php echo $username; ?>">
                  <span class="help-block"><?php echo $username_err; ?></span>
                  </div>
 
@@ -172,7 +175,7 @@
                  </div>
 
                  <div class="form-group <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
-                 <input class="form-control" type="password" name="password-repeat" placeholder="Password (repeat)" value="<?php echo $confirm_password; ?>">
+                 <input class="form-control" type="password" name="confirm_password" placeholder="Password (repeat)" value="<?php echo $confirm_password; ?>">
                  <span class="help-block"><?php echo $confirm_password_err; ?></span>
                  </div>
 

@@ -33,11 +33,9 @@ if(isset($_GET["action"])){
         VALUES (".$id.",".$_GET['group']." , '".$r['group_name']."', 'assets/img/sharing-money-2.png')";
 
     mysqli_query($connect, $sql);
-
      }
-     echo '<script>window.location="welcome.php"</script>';
 
-
+echo '<script>window.location="welcome.php"</script>';
 
 }
  // Close connection
@@ -46,7 +44,7 @@ if(isset($_GET["action"])){
 
 
 <!DOCTYPE html>
-<html>
+<html  style="background-color: rgb(46,15,123);">
 
 <head>
     <meta charset="utf-8">
@@ -58,7 +56,7 @@ if(isset($_GET["action"])){
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body>
+<body  style="background-color: rgb(46,15,123);">
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
         <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo"><a class="navbar-brand" href="#" style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <input
@@ -66,6 +64,11 @@ if(isset($_GET["action"])){
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="nav navbar-nav"></ul>
                 </div>
+                <div class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" style="color: rgb(230,255,255);">Dropdown </a>
+            <div class="dropdown-menu dropdown-menu-right" role="menu"><a class="dropdown-item" role="presentation" href="#">SETTING</a><a class="dropdown-item" role="presentation" href="#">JOIN GROUP</a><a class="dropdown-item" role="presentation" href="#">CREATE GROUP</a>
+                <a class="dropdown-item" role="presentation" href="logout.php">LOGOUT</a>
+            </div>
+        </div>
         </div>
     </nav>
     <div role="tablist" id="accordion-1">
@@ -86,10 +89,10 @@ if(isset($_GET["action"])){
                                             while($row = $result->fetch_assoc()) {
 
                                              ?>
-                                    
- 
+
+
                                     <td class="text-justify"><a href="ESTRAHA.php?group=<?php echo $row["group_id"];?>&id=<?php echo $row["user_id"];?>" style="color: rgb(230,255,255);font-size: 25px;"><img src="<?php echo $row["image"];?>" width="100px" height="100px" alt="group logo">&nbsp;<?php echo $row["group_name"]?>&nbsp;</a></td>
-                                   
+
 
 
                                    <?php
@@ -121,19 +124,19 @@ if(isset($_GET["action"])){
 
                                              ?>
                                             <div>
-                                             <label><?php echo  $row2["group_name"] ?></label>
+                                             <label style="color: white"><?php echo  $row2["group_name"] ?></label>
                                              <a class="btn btn-primary"  href="welcome.php?action=join&group=<?php echo $row2["group_id"];?>">Join</a>
-                                             <a class="btn btn-primary" href="welcome.php?action=reject&group=<?php echo $row2["group_id"];?>">Reject</a>
+                                             <a class="btn btn-primary"  href="welcome.php?action=reject&group=<?php echo $row2["group_id"];?>">Reject</a>
                                              </div>
 
 
 
                       <?php
-                      
+
 
                       }
                   }else{
-                  ?>  
+                  ?>
                     <p class="card-text" style="color: rgb(230,255,255);">YOU HAVE NO INVITAIONS</p>
                        <?php
 
@@ -147,11 +150,11 @@ if(isset($_GET["action"])){
             </div>
             <div class="collapse item-3" role="tabpanel" data-parent="#accordion-1" style="color: rgb(230,255,255);background-color: rgb(15,7,67);">
                 <div class="card-body">
-                                        
+
                     <p class="card-text">YOU HAVE NO REQUISTS</p>
 
 
-                 
+
                 </div>
             </div>
         </div>
