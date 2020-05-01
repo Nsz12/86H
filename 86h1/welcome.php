@@ -65,7 +65,8 @@ echo '<script>window.location="welcome.php"</script>';
                     <ul class="nav navbar-nav"></ul>
                 </div>
                 <div class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" style="color: rgb(230,255,255);">Dropdown </a>
-            <div class="dropdown-menu dropdown-menu-right" role="menu"><a class="dropdown-item" role="presentation" href="#">SETTING</a><a class="dropdown-item" role="presentation" href="#">JOIN GROUP</a><a class="dropdown-item" role="presentation" href="#">CREATE GROUP</a>
+            <div class="dropdown-menu dropdown-menu-right" role="menu"><a class="dropdown-item" role="presentation" href="#">SETTING</a><a class="dropdown-item" role="presentation" href="#">JOIN GROUP</a>
+              <a class="dropdown-item" role="presentation" onclick="Create_group()">CREATE GROUP</a>
                 <a class="dropdown-item" role="presentation" href="logout.php">LOGOUT</a>
             </div>
         </div>
@@ -178,5 +179,30 @@ echo '<script>window.location="welcome.php"</script>';
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
+
+<script>
+function Create_group() {
+  var group = prompt("Please enter the group name");
+  if (group != null) {
+  <?php
+  require_once "config.php";
+
+  $id = $_SESSION['id'];
+
+  $sql= "INSERT INTO groups (group_name, owner) VALUES (echo'"<script>document.writeln(group);</script>"';,$id)";
+  mysqli_query($connect, $sql);
+
+  $group_id="SELECT group_id from groups where owner = '$id' and group_name=".echo"'<script>document.writeln(group);</script>'";.";";
+  $owner_id="SELECT $owner_id from groups where group_id = ".$group_id."";
+
+  $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$owner_id.","1");";
+  mysqli_query($connect, $sql);
+
+  mysqli_close($connect);
+
+   ?>
+  }
+}
+</script>
 
 </html>
