@@ -54,6 +54,12 @@ echo '<script>window.location="welcome.php"</script>';
     <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
     <link rel="stylesheet" href="assets/css/Footer-Basic.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+
+  <script>
+show(){
+     style="display:none";
+}
+  </script>
 </head>
 
 <body  style="background-color: rgb(46,15,123);">
@@ -66,7 +72,7 @@ echo '<script>window.location="welcome.php"</script>';
                 </div>
                 <div class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" style="color: rgb(230,255,255);">Dropdown </a>
             <div class="dropdown-menu dropdown-menu-right" role="menu"><a class="dropdown-item" role="presentation" href="#">SETTING</a>
-              <a class="dropdown-item" role="presentation"onclick="show()">JOIN GROUP</a>
+            <a class="dropdown-item"role="presentation" onclick="show()" >JOIN GROUP</a>
               <a class="dropdown-item" role="presentation" onclick="Create_group()">CREATE GROUP</a>
                 <a class="dropdown-item" role="presentation" href="logout.php">LOGOUT</a>
             </div>
@@ -110,6 +116,9 @@ echo '<script>window.location="welcome.php"</script>';
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div id="myP1" style="display:none">
+                    <h1>HHH</h1>
                 </div>
             </div>
         </div>
@@ -179,21 +188,44 @@ echo '<script>window.location="welcome.php"</script>';
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
+    <form id="group_form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+     <input type="hidden" name="group_name" id="group_name" value="<?php echo $group_name; ?>" />
+    </form>
+
+
 </body>
 
-<script>
+<script type="text/javascript">
+function show(){
+  document.getElementById("myP1").style.display = "";
+
+}
+</script>
+
+<script type="text/javascript">
 function Create_group() {
   var group = prompt("Please enter the group name");
+    alert("hi");
+    alert(group);
+
+
   if (group != null) {
-  <?php
+      alert("hiasdasdd");
+
+    document.getElementById("group_name").value = group;
+   document.getElementById("group_form").submit();
+    alert("php");
+
+ <?php
   require_once "config.php";
 
   $id = $_SESSION['id'];
 
-  $group_name='<script>document.writeln(group);</script>';
-  ?>
-  alert(<?php  $group_name ?>);
-  <?php
+  $group_name=$_POST['group_name'];
+$ss= "id=".$id." and the name is ".$group_name;
+  echo "alert('$ss' );";
+
   $sql= "INSERT INTO groups (group_name, owner) VALUES (".$group_name.",".$id.")";
   mysqli_query($connect, $sql);
 
@@ -211,12 +243,8 @@ function Create_group() {
   mysqli_close($connect);
 
    ?>
+alert("php end");
   }
-}
-
-function show(){
-// for khalid
-
 
 }
 </script>
