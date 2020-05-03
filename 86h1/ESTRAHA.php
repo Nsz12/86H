@@ -11,41 +11,34 @@ require_once "config.php";
 
 
 if(isset($_GET["group"])&&isset($_GET["id"])){
-$sql = "SELECT * from do_list where user_id = ".$_GET["id"];
+$sql = "SELECT * from to_do_list where user_id = ".$_GET["id"]." and group_id = ".$_GET["group"]." and status = 2";
 $my_list = mysqli_query($connect, $sql);
-$sql = "SELECT * from do_list where group_id = ".$_GET["group"];
+$sql = "SELECT * from to_do_list where group_id = ".$_GET["group"]." and status = 3";
 $group_list = mysqli_query($connect, $sql);
 
-$sql = "SELECT * from not_assign where group_id = ".$_GET["group"];
+$sql = "SELECT * from to_do_list where group_id = ".$_GET["group"]." and status = 1";
 $not_assign = mysqli_query($connect, $sql);
 
 
 if(isset($_GET["action"])){
-    $sql = "DELETE from invitation where group_id = ".$_GET['group']." and user_id = ".$id;
-    mysqli_query($connect, $sql);
-
-     if($_GET["action"] == "join"){
-        $sql = "SELECT group_name from groups_list where group_id = ".$_GET['group'];
-        $res = mysqli_query($connect, $sql);
-        $r = $res->fetch_assoc();
-       $sql= "INSERT INTO groups_list (user_id, group_id, group_name, image)
-        VALUES (".$id.",".$_GET['group']." , '".$r['group_name']."', 'assets/img/sharing-money-2.png')";
-
-    mysqli_query($connect, $sql);
-
-     }
-     echo '<script>window.location="welcome.php"</script>';
+   
 
      if($_GET["action"]=="add"){
-         $sql = "INSERT into not_assign(user_id, group_id, name) VALUES (".$_GET["id"].",".$_GET["group"].",".$_GET["item"].")";
+        
+         $sql = "INSERT into to_do_list(group_id, item, status) VALUES (".$_GET["group"].",'".$_GET["item"]."', 1)";
+         
          mysqli_query($connect, $sql);
-     }else{
-        $sql = "INSERT into do_list(group_id, name) VALUES (".$_GET["id"].",".$_GET["group"].",".$_GET["item"].")";
+
+     }else if($_GET["action"]=="pick"){
+        $sql = "UPDATE to_do_list SET user_id=".$_GET["id"].", status=2 WHERE item_id=".$_GET["item_id"];
          mysqli_query($connect, $sql);
-         $sql = "DELETE from not_assign where  group_id = ".$_GET['group']." and name =".$_GET["item"];
+         
+     }else if($_GET["action"]=="check"){
+        $sql = "UPDATE to_do_list SET amount=".$_GET["amount"].", status=3 WHERE item_id=".$_GET["item_id"];
          mysqli_query($connect, $sql);
      }
-     echo '<script>window.location="ESTRAHA.php?group="'.$_GET["group"].'&id='.$_GET["id"].'</script>';
+     
+     header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]);
 }
 
 
@@ -86,13 +79,13 @@ if(isset($_GET["action"])){
         </div>
         <div class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" style="color: rgb(230,255,255);">Dropdown </a>
             <div class="dropdown-menu dropdown-menu-right" role="menu">
-                <a class="dropdown-item" role="presentation" href="#">SETTING</a>
+                
                 <?php
 
-                if($_GET["status"]==1){
+                if($_GET["status"]!=1){
 
                     ?>
-                <a class="dropdown-item" role="presentation" href="#">INVAITE</a>
+                <a class="dropdown-item" role="presentation" href="#">INVITE</a>
                 <?php
 
             }
@@ -120,15 +113,26 @@ if(isset($_GET["action"])){
 
                                              ?>
                                 <tr>
-                                    <td><span style="color: rgb(230,255,255);"><?php echo $row_my_list["name"] ?>&nbsp; &nbsp;</span><button class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">CHECK</button><input class="border rounded float-right"
-                                            type="text" placeholder="SET PRICE"></td>
+                                    <td>
+                                        <span style="color: rgb(230,255,255);"><?php echo $row_my_list["item"] ?>&nbsp; &nbsp;</span>
+                                        <form action="ESTRAHA.php" method="GET">
+                                            <input class="border rounded float-right"
+                                           name="amount" type="text" placeholder="SET PRICE">
+                                           <input type="hidden" name="group" value="<?php echo $_GET['group']?>">
+                                            <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
+                                            <input type="hidden" name="action" value="check">
+                                            <input type="hidden" name="item_id" value="<?php echo $row_my_list['item_id'] ?>">
+                                        <input class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);" value="CHECK">
+                                        
+                                            </form>
+                                        </td>
                                 </tr>
                                
                                    <?php
                                     }
 
                                    } else {
-                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>there are nothing to do<p><div class='card-body'>";
+                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>THERE ARE NOTHING TO DO<p><div class='card-body'>";
                                             }
 
 
@@ -157,15 +161,15 @@ if(isset($_GET["action"])){
                                              ?>
                                 <tr>
                                     <td>
-                                        <span style="color: rgb(230,255,255);"><?php echo $row_group_list["name"] ?></span>
-                                        <button class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);"><?php echo $row_group_list["user_name"]?></button>
+                                        <span style="color: rgb(230,255,255);"><?php echo $row_group_list["item"] ?></span>
+                                        <button class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">DONE</button>
                                     </td>
                                 </tr>
                                 <?php
                                     }
 
                                    } else {
-                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>there are nothing to do<p><div class='card-body'>";
+                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>THERE ARE NOTHING TO DO<p><div class='card-body'>";
                                             }
 
 
@@ -194,14 +198,14 @@ if(isset($_GET["action"])){
                                              ?>
                                 <tr>
                                     <td>
-                                        <span style="color: rgb(230,255,255);"><?php echo $row_not_assign["name"]?></span>
-                                        <a class="btn btn-link float-right" href="ESTRAHA.php?action=pick&group=<?php echo $_GET['group']?>&id=<?php echo $_GET['id']?>&item=<?php echo $row_not_assign["name"]?>" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">PICK</a>
+                                        <span style="color: rgb(230,255,255);"><?php echo $row_not_assign["item"]?></span>
+                                        <a class="btn btn-link float-right" href="ESTRAHA.php?action=pick&group=<?php echo $_GET['group']?>&id=<?php echo $_GET['id']?>&item_id=<?php echo $row_not_assign["item_id"]?>" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">PICK</a>
                                     </td>
                                 </tr>
                                 <?php
                                     }
                                  } else {
-                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>there are nothing to assign<p><div class='card-body'>";
+                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>THERE ARE NOTHING TO ASSIGN<p><div class='card-body'>";
                                             }
 
 
@@ -218,8 +222,11 @@ if(isset($_GET["action"])){
             </div>
             <div class="collapse item-4" role="tabpanel" data-parent="#accordion-1" style="background-color: rgb(15,7,67);">
                 <div class="card-body">
-                    <form action="ESTRAHA.php?action=add&group=<?php echo $_GET['group']?>&id=<?php echo $_GET['id']?>" method="get">
+                    <form action="ESTRAHA.php" method="GET">
                     <input type="text" name="item" placeholder="ADD ITEM">
+                    <input type="hidden" name="group" value="<?php echo $_GET['group']?>">
+                    <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
+                    <input type="hidden" name="action" value="add">
                     <input class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);" value="ADD">
                     </form>
                 </div>

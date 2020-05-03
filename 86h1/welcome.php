@@ -15,7 +15,7 @@ if(!empty($_POST["group_name1"])){
   $id = $_SESSION['id'];
    $group_name1=$_POST['group_name1'];
 
-  $sql= "INSERT INTO groups (group_name, owner) VALUES ('".$group_name1."',".$id.")";
+  $sql= "INSERT INTO groups (group_name, owner, image) VALUES ('".$group_name1."',".$id.", 'assets/img/sharing-money-2.png')";
    mysqli_query($connect, $sql);
 
    $group_id= mysqli_insert_id($connect);
@@ -30,7 +30,7 @@ if(!empty($_POST["group_name1"])){
 $dd="INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES ('$zz',1);";
   echo "<script>alert('$dd');</script>";
 */
-   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",1);";
+   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",3);";
    mysqli_query($connect, $sql);
 }
 }
@@ -80,7 +80,7 @@ echo '<script>window.location="welcome.php"</script>';
 $id = $_SESSION['id'];
 
 //select statment
-$sql = "SELECT * from groups_list where user_id = ".$id ;
+$sql = "SELECT * from group_users JOIN groups on groups.group_id = group_users.group_id_fk where group_users.user_id_fk = ".$id ;
 //store the result
 $result = mysqli_query($connect, $sql);
 
@@ -94,11 +94,11 @@ if(isset($_GET["action"])){
     mysqli_query($connect, $sql);
 
      if($_GET["action"] == "join"){
-        $sql = "SELECT group_name from groups_list where group_id = ".$_GET['group'];
+        $sql = "SELECT group_name from groups where group_id = ".$_GET['group'];
         $res = mysqli_query($connect, $sql);
         $r = $res->fetch_assoc();
-       $sql= "INSERT INTO groups_list (user_id, group_id, group_name, image)
-        VALUES (".$id.",".$_GET['group']." , '".$r['group_name']."', 'assets/img/sharing-money-2.png')";
+       $sql= "INSERT INTO group_users (user_id_fk, group_id_fk, status)
+        VALUES (".$id.",".$_GET['group']." , 1)";
 
     mysqli_query($connect, $sql);
      }
@@ -179,7 +179,10 @@ show(){
                                              ?>
 
 
-                                    <td class="text-justify"><a href="ESTRAHA.php?group=<?php echo $row["group_id"];?>&id=<?php echo $row["user_id"];?>" style="color: rgb(230,255,255);font-size: 25px;"><img src="<?php echo $row["image"];?>" width="100px" height="100px" alt="group logo">&nbsp;<?php echo $row["group_name"]?>&nbsp;</a></td>
+                                    <td class="text-justify">
+                                      <a href="ESTRAHA.php?group=<?php echo $row["group_id"];?>&id=<?php echo $row["user_id_fk"];?>" style="color: rgb(230,255,255);font-size: 25px;">
+                                        <img src="<?php echo $row["image"];?>" width="100px" height="100px" alt="group logo">&nbsp;<?php echo $row["group_name"]?>&nbsp;</a>
+                                      </td>
 
 
 
@@ -187,7 +190,7 @@ show(){
                                     }
 
                                    } else {
-                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>you are not joined in any group<p><div class='card-body'>";
+                                             echo "<div class='card-body'><p class='card-text' style='color: rgb(230,255,255);'>YOU ARE NOT JOINED IN ANY GROUP<p><div class='card-body'>";
                                             }
 
 
@@ -197,11 +200,9 @@ show(){
                         </table>
                     </div>
                 </div>
-                <div id="myP1" style="display:none">
-                    <h1>HHH</h1>
-                </div>
+               
             </div>
-        </div>
+        
         <div class="card">
             <div class="card-header" role="tab" style="background-color: rgb(46,15,123);">
                 <h5 class="mb-0" style="background-color: rgb(46,15,123);"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-2" href="#accordion-1 .item-2" style="color: rgb(230,255,255);">INVITAIONS</a></h5>
