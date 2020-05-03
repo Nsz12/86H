@@ -64,6 +64,7 @@
                              $email_err = "This email is already used.";
                          } else{
                              $email = trim($_POST["email"]);
+                             
                          }
                      } else{
                          echo "Oops! Something went wrong. Please try again later.";
@@ -115,7 +116,6 @@
              } else{
                  echo "Something went wrong. Please try again later.";
              }
-
              // Close statement
              mysqli_stmt_close($stmt);
          }
@@ -128,7 +128,7 @@
 
 
  <!DOCTYPE html>
- <html style="background-color: rgb(46,15,123);">
+ <html  style="background-color: rgb(46,15,123);">
 
  <head>
      <meta charset="utf-8">
@@ -141,7 +141,7 @@
      <link rel="stylesheet" href="assets/css/styles.css">
  </head>
 
- <body style="background-color: rgb(46,15,123);">
+ <body  style="background-color: rgb(46,15,123);">
      <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
          <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px"><a class="navbar-brand" href="#" style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
              <div

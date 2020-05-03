@@ -62,25 +62,47 @@ if(isset($_GET["action"])){
 
 
      }else if($_GET["action"]== "kick"){
-        $sql = "SELECT owner from groups where group_id = ".$_GET["group"];
+        $sql = "SELECT status from group_users where group_id_fk = ".$_GET["group"]." and user_id_fk= ".$_GET['user_id'];
         $owner = mysqli_query($connect, $sql);
         $o = $owner->fetch_assoc();
-        if($o != $_GET["user_id"]){
+        if($o != 3){
             $sql = "DELETE from group_users where group_id_fk = ".$_GET['group']." and user_id_fk = ".$_GET['user_id'];
             mysqli_query($connect, $sql);
+        }else{
+            echo "<script>alert('You can not kick the owner of the group');</script>";
         }
      }else if($_GET["action"]== "promote"){
         $sql = "UPDATE group_users SET status=2 WHERE user_id_fk=".$_GET["user_id"]." and group_id_fk = ".$_GET["group"];
         mysqli_query($connect, $sql);
      }
      
-     header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status=".$_GET["status"]);
+     
+
+             
+           else if($_GET["action"]== "bill"){
+              $sql = "SELECT COUNT(user_id) from to_do_list where group_id= ".$_GET['group'];
+              $xsql = mysqli_query($connect, $sql);
+              $x = $xsql->fetch_assoc();
+              $sql = "SELECT sum(amount) from to_do_list where group_id= ".$_GET['group']." and status = 3";
+              $ysql = mysqli_query($connect, $sql);
+              $y = $ysql->fetch_assoc();
+              $z = $y/$x; 
+
+            $sql = "SELECT sum(amount) as amount, user_id from to_do_list where group_id=".$_GET['group']." and status= 3 group by user_id ";
+            $result = mysqli_query($connect, $sql);
+            if ($result->num_rows > 0) {
+                                            // output data of each row
+                                            while($row = $result->fetch_assoc()) {
+                                               $a = $row["amount"];
+                                               $change=$a-$z;
+                                               $sql = "INSERT into wallet(wgroup_id,wuser_id, amount) VALUES(".$_GET["group"].",".$row["user_id"].",".$change.")";
+                                             }
+                            }
+             }
+header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status=".$_GET["status"]);
+
 }
-
-
 }
-
-
 
 
 
@@ -200,7 +222,7 @@ if(isset($_GET["action"])){
                 <button type="button" class="dropdown-item" role="presentation" onclick="invite();">INVITE</button>
                 <button type="button" class="dropdown-item" role="presentation" onclick="kick();">KICK</button>
                 <button type="button" class="dropdown-item" role="presentation" onclick="promote();">PROMOTE TO ADMIN</button>
-                <button type="button" class="dropdown-item" role="presentation">GENERATE BILL</button>
+                <a href="ESTRAHA.php?group=<?php echo $_GET["group"];?>&id=<?php echo $_GET["id"];?>&status=<?php echo $_GET["status"];?>&action=bill" class="dropdown-item" role="presentation">GENERATE BILL</a>
                 
                 <?php
                 }
