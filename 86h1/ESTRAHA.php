@@ -56,6 +56,22 @@ if(isset($_GET["action"])){
         header("location: welcome.php");
         exit;
        
+     }else if($_GET["action"]== "invite"){
+        $sql = "INSERT into invitation(group_id, user_id) VALUES(".$_GET["group"].",".$_GET["user_id"].")";
+        mysqli_query($connect, $sql);
+
+
+     }else if($_GET["action"]== "kick"){
+        $sql = "SELECT owner from groups where group_id = ".$_GET["group"];
+        $owner = mysqli_query($connect, $sql);
+        $o = $owner->fetch_assoc();
+        if($o != $_GET["user_id"]){
+            $sql = "DELETE from group_users where group_id_fk = ".$_GET['group']." and user_id_fk = ".$_GET['user_id'];
+            mysqli_query($connect, $sql);
+        }
+     }else if($_GET["action"]== "promote"){
+        $sql = "UPDATE group_users SET status=2 WHERE user_id_fk=".$_GET["user_id"]." and group_id_fk = ".$_GET["group"];
+        mysqli_query($connect, $sql);
      }
      
      header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status=".$_GET["status"]);
@@ -373,27 +389,21 @@ function invite() {
   document.getElementById("promote").style.display = "none";
 }
 
-function closeinvite() {
-  document.getElementById("invite").style.display = "none";
-}
+
 function kick() {
   document.getElementById("kick").style.display = "block";
   document.getElementById("promote").style.display = "none";
   document.getElementById("invite").style.display = "none";
 }
 
-function closekick() {
-  document.getElementById("kick").style.display = "none";
-}
+
 function promote() {
   document.getElementById("promote").style.display = "block";
   document.getElementById("kick").style.display = "none";
   document.getElementById("invite").style.display = "none";
 }
 
-function closepromote() {
-  document.getElementById("promote").style.display = "none";
-}
+
 </script>
 </body>
 

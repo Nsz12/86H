@@ -85,7 +85,7 @@ $sql = "SELECT * from group_users JOIN groups on groups.group_id = group_users.g
 $result = mysqli_query($connect, $sql);
 
 
-$sql = "SELECT * from invitation where user_id =". $id ;
+$sql = "SELECT * from invitation JOIN groups on groups.group_id = invitation.group_id where invitation.user_id = ".$id ;
 
 $invite = mysqli_query($connect, $sql);
 
@@ -94,9 +94,6 @@ if(isset($_GET["action"])){
     mysqli_query($connect, $sql);
 
      if($_GET["action"] == "join"){
-        $sql = "SELECT group_name from groups where group_id = ".$_GET['group'];
-        $res = mysqli_query($connect, $sql);
-        $r = $res->fetch_assoc();
        $sql= "INSERT INTO group_users (user_id_fk, group_id_fk, status)
         VALUES (".$id.",".$_GET['group']." , 1)";
 
@@ -214,7 +211,7 @@ show(){
                     if ($invite->num_rows > 0) {
                                             // output data of each row
                                             while($row2 = $invite->fetch_assoc()) {
-
+                                              $sql = "SELECT name";
                                              ?>
                                             <div>
                                              <label style="color: white"><?php echo  $row2["group_name"] ?></label>
