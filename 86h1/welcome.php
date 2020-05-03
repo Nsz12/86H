@@ -1,13 +1,81 @@
 <?php
 // Initialize the session
 session_start();
+
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: index.php");
     exit;
 }
-// Include config file
 require_once "config.php";
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if(isset($_POST["group_name1"])){
+if(!empty($_POST["group_name1"])){
+
+  $id = $_SESSION['id'];
+   $group_name1=$_POST['group_name1'];
+
+  $sql= "INSERT INTO groups (group_name, owner) VALUES ('".$group_name1."',".$id.")";
+   mysqli_query($connect, $sql);
+
+   $group_id= mysqli_insert_id($connect);
+   $ss= "id=".$id." and the group id is ".$group_id;
+
+ // echo "<script>alert('$ss' );</script>";
+
+  /* $sql="SELECT ".$id." from groups where group_id = ".$group_id."";
+   $owner_id = mysqli_query($connect, $sql);
+*/
+/*$zz= "".$group_id.",".$id;
+$dd="INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES ('$zz',1);";
+  echo "<script>alert('$dd');</script>";
+*/
+   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",1);";
+   mysqli_query($connect, $sql);
+}
+}
+echo '<script>window.location="welcome.php"</script>';
+
+}
+// Include config file
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if(isset($_POST["group_join"])){
+if(!empty($_POST["group_join"])){
+
+  $id = $_SESSION['id'];
+   $group_id=$_POST['group_join'];
+
+   $sql = "SELECT group_id from groups where group_id = ".$group_id ;
+   //store the result
+   $result = mysqli_query($connect, $sql);
+
+   if ($result==1) {
+
+  $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",3)";
+   mysqli_query($connect, $sql);
+
+  /* $group_id= mysqli_insert_id($connect);
+   $ss= "id=".$id." and the group id is ".$group_id;
+
+ // echo "<script>alert('$ss' );</script>";
+
+  /* $sql="SELECT ".$id." from groups where group_id = ".$group_id."";
+   $owner_id = mysqli_query($connect, $sql);
+*/
+/*$zz= "".$group_id.",".$id;
+$dd="INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES ('$zz',1);";
+  echo "<script>alert('$dd');</script>";
+*/
+/*   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",1);";
+   mysqli_query($connect, $sql);*/
+ }
+}
+}
+echo '<script>window.location="welcome.php"</script>';
+
+}
+
 //get information about the user for the database
 $id = $_SESSION['id'];
 
@@ -38,6 +106,22 @@ if(isset($_GET["action"])){
 echo '<script>window.location="welcome.php"</script>';
 
 }
+ /*if(isset($_POST["group_name"])){
+ $id = $_SESSION['id'];
+
+  $sql= "INSERT INTO groups (group_name, owner) VALUES ('".$group_name."',".$id.")";
+   mysqli_query($connect, $sql);
+
+   $group_id= mysqli_insert_id($connect);
+     echo "php group id =".$group_id;
+
+   $sql="SELECT ".$owner_id." from groups where group_id = ".$group_id."";
+   $owner_id = mysqli_query($connect, $sql);
+
+
+   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$owner_id.",1);";
+   mysqli_query($connect, $sql);
+}*/
  // Close connection
     mysqli_close($connect);
 ?>
@@ -64,18 +148,14 @@ show(){
 
 <body  style="background-color: rgb(46,15,123);">
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
-        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo"><a class="navbar-brand" href="#" style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo"><span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <input
                 class="border rounded" type="search" placeholder="search">
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="nav navbar-nav"></ul>
                 </div>
-                <div class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" style="color: rgb(230,255,255);">Dropdown </a>
-            <div class="dropdown-menu dropdown-menu-right" role="menu"><a class="dropdown-item" role="presentation" href="#">SETTING</a>
-            <a class="dropdown-item"role="presentation" onclick="show()" >JOIN GROUP</a>
-              <a class="dropdown-item" role="presentation" onclick="Create_group()">CREATE GROUP</a>
-                <a class="dropdown-item" role="presentation" href="logout.php">LOGOUT</a>
-            </div>
+                <div><a  aria-expanded="false" href="logout.php" style="color: rgb(230,255,255);">LOGOUT </a>
+
         </div>
         </div>
     </nav>
@@ -155,14 +235,40 @@ show(){
                 </div>
             </div>
         </div>
-        <div class="card">
+          <div class="card">
             <div class="card-header" role="tab" style="background-color: rgb(46,15,123);">
-                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-3" href="#accordion-1 .item-3" style="color: rgb(230,255,255);">REQUISTS</a></h5>
+                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-3" href="#accordion-1 .item-3" style="color: rgb(230,255,255);">CREATE GROUP</a></h5>
             </div>
             <div class="collapse item-3" role="tabpanel" data-parent="#accordion-1" style="color: rgb(230,255,255);background-color: rgb(15,7,67);">
                 <div class="card-body">
 
-                    <p class="card-text">YOU HAVE NO REQUISTS</p>
+                  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+
+                <div class="card-body">
+                  <input type="text" name="group_name1"  value="<?php echo $group_name1; ?>" placeholder="GROUP NAME">
+                  <button class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">CREATE</button>
+                </div>
+              </form>
+
+
+
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" role="tab" style="background-color: rgb(46,15,123);">
+                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-4" href="#accordion-1 .item-4" style="color: rgb(230,255,255);">JOIN GROUP</a></h5>
+            </div>
+            <div class="collapse item-4" role="tabpanel" data-parent="#accordion-1" style="color: rgb(230,255,255);background-color: rgb(15,7,67);">
+                <div class="card-body">
+
+                  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+
+                <div class="card-body">
+                  <input type="text" name="group_join"  value="<?php echo $group_join; ?>" placeholder="GROUP ID">
+                  <button class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">JOIN</button>
+                </div>
+              </form>
 
 
 
@@ -189,9 +295,6 @@ show(){
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 
-    <form id="group_form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-     <input type="hidden" name="group_name" id="group_name" value="<?php echo $group_name; ?>" />
-    </form>
 
 
 </body>
@@ -204,7 +307,7 @@ function show(){
 </script>
 
 <script type="text/javascript">
-function Create_group() {
+/*function Create_group() {
   var group = prompt("Please enter the group name");
     alert("hi");
     alert(group);
@@ -217,20 +320,21 @@ function Create_group() {
    document.getElementById("group_form").submit();
     alert("php");
 
- <?php
+ /*<php
   require_once "config.php";
 
   $id = $_SESSION['id'];
 
-  $group_name=$_POST['group_name'];
-$ss= "id=".$id." and the name is ".$group_name;
-  echo "alert('$ss' );";
 
-  $sql= "INSERT INTO groups (group_name, owner) VALUES (".$group_name.",".$id.")";
-  mysqli_query($connect, $sql);
 
-  $sql="SELECT group_id from groups where owner = ".$id." and group_name=".$group_name;
-  $group_id = mysqli_query($connect, $sql);
+  $sql= "INSERT INTO groups (group_name, owner) VALUES ('".$group_name."',".$id.")";
+ if (mysqli_query($connect, $sql)) {
+  echo "alert('New record created successfully. Last inserted ID is: " . $id."');";
+
+ }else{
+     echo "alert('Error: " . mysqli_error($conn)."');";
+ }
+  $group_id  = mysqli_insert_id($connect);
 
 
   $sql="SELECT ".$owner_id." from groups where group_id = ".$group_id."";
@@ -246,7 +350,7 @@ $ss= "id=".$id." and the name is ".$group_name;
 alert("php end");
   }
 
-}
+}*/
 </script>
 
 </html>
