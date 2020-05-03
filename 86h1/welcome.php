@@ -51,8 +51,8 @@ if(!empty($_POST["group_join"])){
    $result = mysqli_query($connect, $sql);
 
    if ($result==1) {
-
-  $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",3)";
+// status 1 for members status 2 for admins status 3 for owner 
+  $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",1)";
    mysqli_query($connect, $sql);
 
   /* $group_id= mysqli_insert_id($connect);
@@ -148,7 +148,8 @@ show(){
 
 <body  style="background-color: rgb(46,15,123);">
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
-        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo"><span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo">
+          <span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <input
                 class="border rounded" type="search" placeholder="search">
                 <div class="collapse navbar-collapse" id="navcol-1">
@@ -180,7 +181,7 @@ show(){
 
 
                                     <td class="text-justify">
-                                      <a href="ESTRAHA.php?group=<?php echo $row["group_id"];?>&id=<?php echo $row["user_id_fk"];?>" style="color: rgb(230,255,255);font-size: 25px;">
+                                      <a href="ESTRAHA.php?group=<?php echo $row["group_id"];?>&id=<?php echo $row["user_id_fk"];?>&status=<?php echo $row["status"];?>" style="color: rgb(230,255,255);font-size: 25px;">
                                         <img src="<?php echo $row["image"];?>" width="100px" height="100px" alt="group logo">&nbsp;<?php echo $row["group_name"]?>&nbsp;</a>
                                       </td>
 

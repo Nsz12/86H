@@ -36,9 +36,29 @@ if(isset($_GET["action"])){
      }else if($_GET["action"]=="check"){
         $sql = "UPDATE to_do_list SET amount=".$_GET["amount"].", status=3 WHERE item_id=".$_GET["item_id"];
          mysqli_query($connect, $sql);
+     }else if($_GET["action"]=="leave"){
+        $sql = "DELETE from group_users where group_id_fk = ".$_GET['group']." and user_id_fk = ".$_GET['id'];
+        mysqli_query($connect, $sql);
+        header("location: welcome.php");
+        exit;
+     }else if($_GET["action"]== "delete"){
+        $sql = "DELETE from group_users where group_id_fk = ".$_GET['group'];
+        mysqli_query($connect, $sql);
+        $sql = "DELETE from invitation where group_id = ".$_GET['group'];
+        mysqli_query($connect, $sql);
+        $sql = "DELETE from to_do_list where group_id = ".$_GET['group'];
+        mysqli_query($connect, $sql);
+        $sql = "DELETE from wallet where wgroup_id = ".$_GET['group'];
+        mysqli_query($connect, $sql);
+
+        $sql = "DELETE from groups where group_id = ".$_GET['group'];
+        mysqli_query($connect, $sql);
+        header("location: welcome.php");
+        exit;
+       
      }
      
-     header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]);
+     header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status=".$_GET["status"]);
 }
 
 
@@ -64,11 +84,57 @@ if(isset($_GET["action"])){
     <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
     <link rel="stylesheet" href="assets/css/Footer-Basic.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <style type="text/css">
+        /* The popup form - hidden by default */
+ .search-container {
+  float: right;
+  display: none;
+}
+
+.search-container input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.search-container button {
+  float: right;
+  padding: 6px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #ccc;
+}
+
+@media screen and (max-width: 600px) {
+  .search-container {
+    float: none;
+  }
+   .search-container input[type=text],.search-container button {
+    float: none;
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+  }
+  .search-container input[type=text] {
+    border: 1px solid #ccc;  
+  }
+}
+    </style>
 </head>
 
 <body style="background-color: rgb(46,15,123);">
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
-        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px"><a class="navbar-brand" href="#" style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px"><span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav">
@@ -76,6 +142,36 @@ if(isset($_GET["action"])){
                     <li class="nav-item" role="presentation"></li>
                     <li class="nav-item" role="presentation"></li>
                 </ul>
+        </div>
+        <div class="search-container" id="invite">
+            <form action="ESTRAHA.php" method="GET">
+                <input type="text" placeholder="ID of the user" name="user_id">
+                <input type="hidden" name="group" value="<?php echo $_GET['group']?>">
+                <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
+                <input type="hidden" name="status" value="<?php echo $_GET['status']?>">
+                <input type="hidden" name="action" value="invite">
+                <button type="submit">Invite</button>
+            </form>
+        </div>
+        <div class="search-container" id="kick">
+            <form action="ESTRAHA.php" method="GET">
+                <input type="text" placeholder="ID of the member" name="user_id">
+                <input type="hidden" name="group" value="<?php echo $_GET['group']?>">
+                <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
+                <input type="hidden" name="status" value="<?php echo $_GET['status']?>">
+                <input type="hidden" name="action" value="kick">
+                <button type="submit">Kick</button>
+            </form>
+        </div>
+        <div class="search-container" id="promote">
+            <form action="ESTRAHA.php" method="GET">
+                <input type="text" placeholder="ID of the member" name="user_id"> 
+                <input type="hidden" name="group" value="<?php echo $_GET['group']?>">
+                <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
+                <input type="hidden" name="status" value="<?php echo $_GET['status']?>">
+                <input type="hidden" name="action" value="promote">
+                <button type="submit">Promote</button>
+            </form>
         </div>
         <div class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" style="color: rgb(230,255,255);">Dropdown </a>
             <div class="dropdown-menu dropdown-menu-right" role="menu">
@@ -85,12 +181,29 @@ if(isset($_GET["action"])){
                 if($_GET["status"]!=1){
 
                     ?>
-                <a class="dropdown-item" role="presentation" href="#">INVITE</a>
+                <button type="button" class="dropdown-item" role="presentation" onclick="invite();">INVITE</button>
+                <button type="button" class="dropdown-item" role="presentation" onclick="kick();">KICK</button>
+                <button type="button" class="dropdown-item" role="presentation" onclick="promote();">PROMOTE TO ADMIN</button>
+                <button type="button" class="dropdown-item" role="presentation">GENERATE BILL</button>
+                
+                <?php
+                }
+                if($_GET["status"]!=3){
+            
+            ?>
+                <a class="dropdown-item" role="presentation" href="ESTRAHA.php?group=<?php echo $_GET["group"];?>&id=<?php echo $_GET["id"];?>&status=<?php echo $_GET["status"];?>&action=leave">LEAVE GROUP</a>
                 <?php
 
             }
-            ?>
-                <a class="dropdown-item" role="presentation" href="#">LEAVE GROUP</a>
+        if($_GET["status"]==3){
+        ?>
+
+        <a class="dropdown-item" role="presentation" href="ESTRAHA.php?group=<?php echo $_GET["group"];?>&id=<?php echo $_GET["id"];?>&status=<?php echo $_GET["status"];?>&action=delete">DELETE GROUP</a>
+        <?php 
+    }
+
+?>
+                <a class="dropdown-item" role="presentation" href="welcome.php">RETURN TO HOME PAGE</a>
             </div>
         </div>
         </div>
@@ -120,6 +233,7 @@ if(isset($_GET["action"])){
                                            name="amount" type="text" placeholder="SET PRICE">
                                            <input type="hidden" name="group" value="<?php echo $_GET['group']?>">
                                             <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
+                                            <input type="hidden" name="status" value="<?php echo $_GET['status']?>">
                                             <input type="hidden" name="action" value="check">
                                             <input type="hidden" name="item_id" value="<?php echo $row_my_list['item_id'] ?>">
                                         <input class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);" value="CHECK">
@@ -199,7 +313,7 @@ if(isset($_GET["action"])){
                                 <tr>
                                     <td>
                                         <span style="color: rgb(230,255,255);"><?php echo $row_not_assign["item"]?></span>
-                                        <a class="btn btn-link float-right" href="ESTRAHA.php?action=pick&group=<?php echo $_GET['group']?>&id=<?php echo $_GET['id']?>&item_id=<?php echo $row_not_assign["item_id"]?>" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">PICK</a>
+                                        <a class="btn btn-link float-right" href="ESTRAHA.php?action=pick&group=<?php echo $_GET['group']?>&id=<?php echo $_GET['id']?>&item_id=<?php echo $row_not_assign["item_id"]?>&status=<?php echo $_GET['status']?>" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">PICK</a>
                                     </td>
                                 </tr>
                                 <?php
@@ -226,6 +340,7 @@ if(isset($_GET["action"])){
                     <input type="text" name="item" placeholder="ADD ITEM">
                     <input type="hidden" name="group" value="<?php echo $_GET['group']?>">
                     <input type="hidden" name="id" value="<?php echo $_GET['id']?>">
+                    <input type="hidden" name="status" value="<?php echo $_GET['status']?>">
                     <input type="hidden" name="action" value="add">
                     <input class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);" value="ADD">
                     </form>
@@ -240,7 +355,7 @@ if(isset($_GET["action"])){
                     href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-facebook"></i></a>
             </div>
             <ul class="list-inline">
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Home</a></li>
+                <li class="list-inline-item"><a href="welcome.php" style="color: rgb(230,255,255);">Home</a></li>
                 <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Services</a></li>
                 <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">About</a></li>
                 <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Terms</a></li>
@@ -251,6 +366,35 @@ if(isset($_GET["action"])){
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+function invite() {
+  document.getElementById("invite").style.display = "block";
+  document.getElementById("kick").style.display = "none";
+  document.getElementById("promote").style.display = "none";
+}
+
+function closeinvite() {
+  document.getElementById("invite").style.display = "none";
+}
+function kick() {
+  document.getElementById("kick").style.display = "block";
+  document.getElementById("promote").style.display = "none";
+  document.getElementById("invite").style.display = "none";
+}
+
+function closekick() {
+  document.getElementById("kick").style.display = "none";
+}
+function promote() {
+  document.getElementById("promote").style.display = "block";
+  document.getElementById("kick").style.display = "none";
+  document.getElementById("invite").style.display = "none";
+}
+
+function closepromote() {
+  document.getElementById("promote").style.display = "none";
+}
+</script>
 </body>
 
 </html>
