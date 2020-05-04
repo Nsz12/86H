@@ -81,6 +81,8 @@ if(isset($_GET["action"])){
 
              
            else if($_GET["action"]== "bill"){
+              $sql = "DELETE from wallet where wgroup_id = ".$_GET["group"];
+              mysqli_query($connect, $sql);
               $sql = "SELECT COUNT(user_id_fk) as count from group_users where group_id_fk= ".$_GET['group'];
               $xsql = mysqli_query($connect, $sql);
               $x = $xsql->fetch_assoc();
@@ -99,6 +101,29 @@ if(isset($_GET["action"])){
                                                mysqli_query($connect, $sql);
                                              }
                             }
+
+                            $sql = "SELECT * from wallet where wgroup_id=".$_GET["group"];
+                          $popup=mysqli_query($connect, $sql);
+                            
+                                if ($popup->num_rows > 0) {
+                                  $rowpop = $popup->fetch_assoc();
+                                 
+                                   $sql = "SELECT * from users where id = ".$rowpop["wuser_id"];
+                                 $rss=mysqli_query($connect, $sql);
+                                 $name = $rss->fetch_assoc();
+                                $str = $name["username"]."    amount = ".$rowpop["amount"]."   ";
+                                    
+                                            // output data of each row
+                                            while($rowpop = $popup->fetch_assoc()) {
+                                                    $sql = "SELECT username from users where id=".$rowpop["wuser_id"];
+                                                   $rss=mysqli_query($connect, $sql);
+                                                    $name = $rss->fetch_assoc();
+                                                   $str .= $name["username"]."    amount = ".$rowpop["amount"]."   ";
+
+}
+}
+echo "<script>alert('".$str."')</script>;";
+
              }
 header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status=".$_GET["status"]);
 
