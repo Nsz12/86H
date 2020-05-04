@@ -8,6 +8,49 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 require_once "config.php";
+$xmlDoc=new DOMDocument();
+$xmlDoc->load("links.xml");
+
+$x=$xmlDoc->getElementsByTagName('link');
+
+//get the q parameter from URL
+$q=$_GET["q"];
+
+//lookup all links from the xml file if length of q>0
+if (strlen($q)>0) {
+  $hint="";
+  for($i=0; $i<($x->length); $i++) {
+    $y=$x->item($i)->getElementsByTagName('title');
+    $z=$x->item($i)->getElementsByTagName('url');
+    if ($y->item(0)->nodeType==1) {
+      //find a link matching the search text
+      if (stristr($y->item(0)->childNodes->item(0)->nodeValue,$q)) {
+        if ($hint=="") {
+          $hint="<a href='" .
+          $z->item(0)->childNodes->item(0)->nodeValue .
+          "' target='_blank'>" .
+          $y->item(0)->childNodes->item(0)->nodeValue . "</a>";
+        } else {
+          $hint=$hint . "<br /><a href='" .
+          $z->item(0)->childNodes->item(0)->nodeValue .
+          "' target='_blank'>" .
+          $y->item(0)->childNodes->item(0)->nodeValue . "</a>";
+        }
+      }
+    }
+  }
+}
+
+// Set output to "no suggestion" if no hint was found
+// or to the correct values
+if ($hint=="") {
+  $response="no suggestion";
+} else {
+  $response=$hint;
+}
+
+//output the response
+echo $response;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST["group_name1"])){
 if(!empty($_POST["group_name1"])){
@@ -136,19 +179,17 @@ echo '<script>window.location="welcome.php"</script>';
     <link rel="stylesheet" href="assets/css/Footer-Basic.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 
-  <script>
-show(){
-     style="display:none";
-}
-  </script>
+  
 </head>
 
 <body  style="background-color: rgb(46,15,123);">
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
         <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo">
           <span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <input
-                class="border rounded" type="search" placeholder="search">
+            <form>
+                <input type="text" size="30" onkeyup="showResult(this.value)">
+                <div id="livesearch"></div>
+            </form>
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="nav navbar-nav"></ul>
                 </div>
@@ -299,9 +340,26 @@ show(){
 </body>
 
 <script type="text/javascript">
-function show(){
-  document.getElementById("myP1").style.display = "";
-
+function showResult(str) {
+  if (str.length==0) {
+    document.getElementById("livesearch").innerHTML="";
+    document.getElementById("livesearch").style.border="0px";
+    return;
+  }
+  if (window.XMLHttpRequest) {
+    // code for IE7+, Firefox, Chrome, Opera, Safari
+    xmlhttp=new XMLHttpRequest();
+  } else {  // code for IE6, IE5
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  xmlhttp.onreadystatechange=function() {
+    if (this.readyState==4 && this.status==200) {
+      document.getElementById("livesearch").innerHTML=this.responseText;
+      document.getElementById("livesearch").style.border="1px solid #A5ACB2";
+    }
+  }
+  xmlhttp.open("GET","livesearch.php?q="+str,true);
+  xmlhttp.send();
 }
 </script>
 
