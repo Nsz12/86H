@@ -18,8 +18,9 @@ $group_list = mysqli_query($connect, $sql);
 
 $sql = "SELECT * from to_do_list where group_id = ".$_GET["group"]." and status = 1";
 $not_assign = mysqli_query($connect, $sql);
-
-
+$sql = "SELECT group_name from groups where group_id = ".$_GET["group"];
+$group_name = mysqli_query($connect, $sql);
+$group_name = $group_name->fetch_assoc();
 if(isset($_GET["action"])){
    
 
@@ -65,7 +66,7 @@ if(isset($_GET["action"])){
         $sql = "SELECT status from group_users where group_id_fk = ".$_GET["group"]." and user_id_fk= ".$_GET['user_id'];
         $owner = mysqli_query($connect, $sql);
         $o = $owner->fetch_assoc();
-        if($o != 3){
+        if($o["status"] != 3){
             $sql = "DELETE from group_users where group_id_fk = ".$_GET['group']." and user_id_fk = ".$_GET['user_id'];
             mysqli_query($connect, $sql);
         }else{
@@ -80,15 +81,14 @@ if(isset($_GET["action"])){
 
              
            else if($_GET["action"]== "bill"){
-              $sql = "SELECT COUNT(user_id) from to_do_list where group_id= ".$_GET['group'];
+              $sql = "SELECT COUNT(user_id_fk) as count from group_users where group_id_fk= ".$_GET['group'];
               $xsql = mysqli_query($connect, $sql);
               $x = $xsql->fetch_assoc();
-              $sql = "SELECT sum(amount) from to_do_list where group_id= ".$_GET['group']." and status = 3";
+              $sql = "SELECT sum(amount) as amount from to_do_list where group_id= ".$_GET['group']." and status = 3";
               $ysql = mysqli_query($connect, $sql);
               $y = $ysql->fetch_assoc();
-              $z = $y/$x; 
-
-            $sql = "SELECT sum(amount) as amount, user_id from to_do_list where group_id=".$_GET['group']." and status= 3 group by user_id ";
+              $z = $y["amount"]/$x["count"]; 
+            $sql = "SELECT sum(to_do_list.amount) as amount,to_do_list.user_id as user_id  from group_users JOIN to_do_list on to_do_list.group_id = group_users.group_id_fk and to_do_list.user_id=group_users.user_id_fk where group_users.group_id_fk = 30 group by to_do_list.user_id ";
             $result = mysqli_query($connect, $sql);
             if ($result->num_rows > 0) {
                                             // output data of each row
@@ -96,6 +96,7 @@ if(isset($_GET["action"])){
                                                $a = $row["amount"];
                                                $change=$a-$z;
                                                $sql = "INSERT into wallet(wgroup_id,wuser_id, amount) VALUES(".$_GET["group"].",".$row["user_id"].",".$change.")";
+                                               mysqli_query($connect, $sql);
                                              }
                             }
              }
@@ -117,7 +118,7 @@ header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>ESTRAHA</title>
+    <title><?php echo $group_name["group_name"]; ?></title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
     <link rel="stylesheet" href="assets/css/Footer-Basic.css">
