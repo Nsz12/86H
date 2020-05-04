@@ -34,6 +34,10 @@ if(isset($_GET["action"])){
         $sql = "UPDATE to_do_list SET user_id=".$_GET["id"].", status=2 WHERE item_id=".$_GET["item_id"];
          mysqli_query($connect, $sql);
          
+     }else if($_GET["action"]=="delete"){
+        $sql = "DELETE from to_do_list where item_id = ".$_GET["item_id"];
+               mysqli_query($connect, $sql);
+         
      }else if($_GET["action"]=="check"){
         $sql = "UPDATE to_do_list SET amount=".$_GET["amount"].", status=3 WHERE item_id=".$_GET["item_id"];
          mysqli_query($connect, $sql);
@@ -77,7 +81,10 @@ if(isset($_GET["action"])){
         mysqli_query($connect, $sql);
      }
      
-     
+     else if($_GET["action"]== "clear"){
+              $sql = "DELETE from to_do_list where group_id = ".$_GET["group"];
+               mysqli_query($connect, $sql);
+     }
 
              
            else if($_GET["action"]== "bill"){
@@ -110,7 +117,7 @@ if(isset($_GET["action"])){
                                  
                                    $sql = "SELECT * from users where id = ".$rowpop["wuser_id"];
                                  $rss=mysqli_query($connect, $sql);
-                                 $name = $rss->fetch_assoc();
+                                $name = $rss->fetch_assoc();
                                 $str = $name["username"]."    amount = ".$rowpop["amount"]."   ";
                                     
                                             // output data of each row
@@ -198,7 +205,9 @@ header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status
 
 <body style="background-color: rgb(46,15,123);">
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
-        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px"><span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px"><span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span>
+          <span style="color: rgb(230,255,255);"><?php echo "THE GROUP ID#".$_GET["group"]; ?></span>
+          <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div
                 class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav">
@@ -249,6 +258,14 @@ header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status
                 <button type="button" class="dropdown-item" role="presentation" onclick="kick();">KICK</button>
                 <button type="button" class="dropdown-item" role="presentation" onclick="promote();">PROMOTE TO ADMIN</button>
                 <a href="ESTRAHA.php?group=<?php echo $_GET["group"];?>&id=<?php echo $_GET["id"];?>&status=<?php echo $_GET["status"];?>&action=bill" class="dropdown-item" role="presentation">GENERATE BILL</a>
+                
+                <?php
+                }
+                if($_GET["status"]!=1){
+            
+            ?>
+            
+                          <a href="ESTRAHA.php?group=<?php echo $_GET["group"];?>&id=<?php echo $_GET["id"];?>&status=<?php echo $_GET["status"];?>&action=clear" class="dropdown-item" role="presentation">CLEAR BILL</a>
                 
                 <?php
                 }
@@ -341,6 +358,7 @@ header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status
                                     <td>
                                         <span style="color: rgb(230,255,255);"><?php echo $row_group_list["item"] ?></span>
                                         <button class="btn btn-link float-right" type="submit" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">DONE</button>
+                                 
                                     </td>
                                 </tr>
                                 <?php
@@ -378,6 +396,8 @@ header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status
                                     <td>
                                         <span style="color: rgb(230,255,255);"><?php echo $row_not_assign["item"]?></span>
                                         <a class="btn btn-link float-right" href="ESTRAHA.php?action=pick&group=<?php echo $_GET['group']?>&id=<?php echo $_GET['id']?>&item_id=<?php echo $row_not_assign["item_id"]?>&status=<?php echo $_GET['status']?>" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">PICK</a>
+                                        
+                                        <a class="btn btn-link float-right" href="ESTRAHA.php?action=delete&group=<?php echo $_GET['group']?>&id=<?php echo $_GET['id']?>&item_id=<?php echo $row_not_assign["item_id"]?>&status=<?php echo $_GET['status']?>" style="background-color: rgb(137,71,244);color: rgb(230,255,255);">DELETE</a>
                                     </td>
                                 </tr>
                                 <?php
@@ -413,20 +433,13 @@ header("location: ESTRAHA.php?group=".$_GET["group"]."&id=".$_GET["id"]."&status
         </div>
     </div>
     <div class="footer-basic" style="background-color: rgb(46,15,123);">
-        <footer>
-            <div class="social"><a href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-instagram" style="color: rgb(230,255,255);"></i></a><a href="#"><i class="icon ion-social-snapchat" style="color: rgb(230,255,255);"></i></a><a href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-twitter"></i></a>
-                <a
-                    href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-facebook"></i></a>
-            </div>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="welcome.php" style="color: rgb(230,255,255);">Home</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Services</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">About</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Terms</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Privacy Policy</a></li>
-            </ul>
-            <p class="copyright" style="color: rgb(230,255,255);">Company Name © 2017</p>
-        </footer>
+      <footer style="background-color: rgb(46,15,123);padding: 8px;">
+          <div class="social"><a href="https://www.instagram.com/86h_kfupm/" style="color: rgb(230,255,255);"><i class="icon ion-social-instagram" style="color: rgb(230,255,255);"></i></a>
+              <a
+                  href="https://twitter.com/86H62674668"><i class="icon ion-social-twitter" style="color: rgb(230,255,255);"></i></a></div>
+      
+          <p class="copyright" style="color: rgb(230,255,255);">86H © 2020</p>
+      </footer>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

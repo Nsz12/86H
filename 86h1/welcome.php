@@ -21,15 +21,6 @@ if(!empty($_POST["group_name1"])){
    $group_id= mysqli_insert_id($connect);
    $ss= "id=".$id." and the group id is ".$group_id;
 
- // echo "<script>alert('$ss' );</script>";
-
-  /* $sql="SELECT ".$id." from groups where group_id = ".$group_id."";
-   $owner_id = mysqli_query($connect, $sql);
-*/
-/*$zz= "".$group_id.",".$id;
-$dd="INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES ('$zz',1);";
-  echo "<script>alert('$dd');</script>";
-*/
    $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",3);";
    mysqli_query($connect, $sql);
 }
@@ -38,6 +29,8 @@ echo '<script>window.location="welcome.php"</script>';
 
 }
 // Include config file
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST["group_join"])){
@@ -51,29 +44,15 @@ if(!empty($_POST["group_join"])){
    $result = mysqli_query($connect, $sql);
 
    if ($result==1) {
-// status 1 for members status 2 for admins status 3 for owner 
+// status 1 for members status 2 for admins status 3 for owner
   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",1)";
    mysqli_query($connect, $sql);
 
-  /* $group_id= mysqli_insert_id($connect);
-   $ss= "id=".$id." and the group id is ".$group_id;
 
- // echo "<script>alert('$ss' );</script>";
-
-  /* $sql="SELECT ".$id." from groups where group_id = ".$group_id."";
-   $owner_id = mysqli_query($connect, $sql);
-*/
-/*$zz= "".$group_id.",".$id;
-$dd="INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES ('$zz',1);";
-  echo "<script>alert('$dd');</script>";
-*/
-/*   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$id.",1);";
-   mysqli_query($connect, $sql);*/
  }
 }
 }
 echo '<script>window.location="welcome.php"</script>';
-
 }
 
 //get information about the user for the database
@@ -103,23 +82,7 @@ if(isset($_GET["action"])){
 echo '<script>window.location="welcome.php"</script>';
 
 }
- /*if(isset($_POST["group_name"])){
- $id = $_SESSION['id'];
 
-  $sql= "INSERT INTO groups (group_name, owner) VALUES ('".$group_name."',".$id.")";
-   mysqli_query($connect, $sql);
-
-   $group_id= mysqli_insert_id($connect);
-     echo "php group id =".$group_id;
-
-   $sql="SELECT ".$owner_id." from groups where group_id = ".$group_id."";
-   $owner_id = mysqli_query($connect, $sql);
-
-
-   $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$owner_id.",1);";
-   mysqli_query($connect, $sql);
-}*/
- // Close connection
     mysqli_close($connect);
 ?>
 
@@ -136,17 +99,16 @@ echo '<script>window.location="welcome.php"</script>';
     <link rel="stylesheet" href="assets/css/Footer-Basic.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 
-  
+
 </head>
 
 <body  style="background-color: rgb(46,15,123);">
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: rgb(46,15,123);">
         <div class="container-fluid"><img src="assets/img/76dc75b0-7f18-4306-9bc8-32e1641adfc1.jpg" width="70px" height="70px" alt="logo">
-          <span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <form>
-                <input type="text" size="30" onkeyup="showResult(this.value)">
-                <div id="livesearch"></div>
-            </form>
+          <span class="navbar-brand"  style="color: rgb(230,255,255);">&nbsp; &nbsp;86H</span> <span style="color: rgb(230,255,255);"><?php echo "YOUR ID#".$_SESSION['id']; ?></span><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+
+      
+
                 <div class="collapse navbar-collapse" id="navcol-1">
                     <ul class="nav navbar-nav"></ul>
                 </div>
@@ -196,9 +158,9 @@ echo '<script>window.location="welcome.php"</script>';
                         </table>
                     </div>
                 </div>
-               
+
             </div>
-        
+
         <div class="card">
             <div class="card-header" role="tab" style="background-color: rgb(46,15,123);">
                 <h5 class="mb-0" style="background-color: rgb(46,15,123);"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-2" href="#accordion-1 .item-2" style="color: rgb(230,255,255);">INVITAIONS</a></h5>
@@ -274,20 +236,13 @@ echo '<script>window.location="welcome.php"</script>';
         </div>
     </div>
     <div class="footer-basic" style="background-color: rgb(46,15,123);">
-        <footer>
-            <div class="social"><a href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-instagram" style="color: rgb(230,255,255);"></i></a><a href="#"><i class="icon ion-social-snapchat" style="color: rgb(230,255,255);"></i></a><a href="#"><i class="icon ion-social-twitter" style="color: rgb(230,255,255);"></i></a>
-                <a
-                    href="#" style="color: rgb(230,255,255);"><i class="icon ion-social-facebook"></i></a>
-            </div>
-            <ul class="list-inline">
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Home</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Services</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">About</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Terms</a></li>
-                <li class="list-inline-item"><a href="#" style="color: rgb(230,255,255);">Privacy Policy</a></li>
-            </ul>
-            <p class="copyright" style="color: rgb(255,255,255);"></p>
-        </footer>
+      <footer style="background-color: rgb(46,15,123);padding: 8px;">
+          <div class="social"><a href="https://www.instagram.com/86h_kfupm/" style="color: rgb(230,255,255);"><i class="icon ion-social-instagram" style="color: rgb(230,255,255);"></i></a>
+              <a
+                  href="https://twitter.com/86H62674668"><i class="icon ion-social-twitter" style="color: rgb(230,255,255);"></i></a></div>
+
+          <p class="copyright" style="color: rgb(230,255,255);">86H © 2020</p>
+      </footer>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
@@ -296,53 +251,5 @@ echo '<script>window.location="welcome.php"</script>';
 
 </body>
 
-
-
-<script type="text/javascript">
-/*function Create_group() {
-  var group = prompt("Please enter the group name");
-    alert("hi");
-    alert(group);
-
-
-  if (group != null) {
-      alert("hiasdasdd");
-
-    document.getElementById("group_name").value = group;
-   document.getElementById("group_form").submit();
-    alert("php");
-
- /*<php
-  require_once "config.php";
-
-  $id = $_SESSION['id'];
-
-
-
-  $sql= "INSERT INTO groups (group_name, owner) VALUES ('".$group_name."',".$id.")";
- if (mysqli_query($connect, $sql)) {
-  echo "alert('New record created successfully. Last inserted ID is: " . $id."');";
-
- }else{
-     echo "alert('Error: " . mysqli_error($conn)."');";
- }
-  $group_id  = mysqli_insert_id($connect);
-
-
-  $sql="SELECT ".$owner_id." from groups where group_id = ".$group_id."";
-  $owner_id = mysqli_query($connect, $sql);
-
-
-  $sql= "INSERT INTO group_users (group_id_fk,user_id_fk,status) VALUES (".$group_id.",".$owner_id.",1);";
-  mysqli_query($connect, $sql);
-
-  mysqli_close($connect);
-
-   ?>
-alert("php end");
-  }
-
-}*/
-</script>
 
 </html>
